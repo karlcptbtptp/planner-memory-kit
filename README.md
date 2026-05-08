@@ -48,6 +48,7 @@ PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--source`、`--project` 误�
 
 ## 文档
 
+- [落地包说明](docs/ROLLOUT_PACKET.md)
 - [飞书字段模板](docs/FEISHU_FIELDS.md)
 - [端到端测试方案](docs/E2E_TEST_PLAN.md)
 - [项目 AGENTS 模板](docs/AGENTS.template.md)
