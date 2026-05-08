@@ -11,9 +11,18 @@
 项目接入人：
 
 1. 把本仓工具装进项目。
-2. 在项目里配置飞书主库的 `app_token` 和 `table_id`。
-3. 在本项目 `AGENTS.md` 加入 `docs/AGENTS.template.md` 里的共享记忆规则。
-4. 执行 dry-run，确认只同步当前项目可见的知识。
+2. 按三模块建立本地目录：`03_memory/`、`90_tools/personal/`、`02_outputs/`。
+3. 在项目里配置飞书主库的 `app_token` 和 `table_id`。
+4. 在本项目 `AGENTS.md` 加入 `docs/AGENTS.template.md` 里的共享记忆规则。
+5. 执行 dry-run，确认只同步当前项目可见的知识。
+
+三模块职责：
+
+| 模块 | 目录 | 说明 |
+|---|---|---|
+| 智能体记忆 | `03_memory/` | AI 可读的稳定上下文、团队共享知识缓存、项目规则 |
+| 个人工具 | `90_tools/personal/` | 个人脚本和快捷工具，默认不进团队 Git |
+| 项目产出 | `02_outputs/` | 报告、策划案、复盘、交付物，按项目需要决定是否提交 |
 
 投稿策划：
 
@@ -54,4 +63,3 @@ cmd /c npm run memory:sync:feishu -- --project "<项目代号>" --dry-run
 ```
 
 确认 dry-run 通过后再真实同步。
-
