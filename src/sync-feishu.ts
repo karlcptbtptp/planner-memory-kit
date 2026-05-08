@@ -140,21 +140,21 @@ function renderSchema(): string {
 | ${FEISHU_MEMORY_FIELDS.title} | 知识标题 |
 | ${FEISHU_MEMORY_FIELDS.summary} | AI 召回摘要 |
 | ${FEISHU_MEMORY_FIELDS.bodyOrLink} | 正文、飞书文档链接或 runbook 路径 |
-| ${FEISHU_MEMORY_FIELDS.knowledgeType} | 原则 / 项目知识 / 个人知识 |
-| ${FEISHU_MEMORY_FIELDS.visibility} | 全策划 / 指定项目 / 仅本人 |
-| ${FEISHU_MEMORY_FIELDS.project} | 项目代号；用于项目隔离 |
-| ${FEISHU_MEMORY_FIELDS.tags} | 标签 |
-| ${FEISHU_MEMORY_FIELDS.status} | 草稿 / 待审核 / 已批准 / 废弃 |
-| ${FEISHU_MEMORY_FIELDS.sensitivity} | 普通内部 / 项目敏感 / 禁止同步 |
-| ${FEISHU_MEMORY_FIELDS.submitter} | 提交人 |
-| ${FEISHU_MEMORY_FIELDS.submittedAt} | 提交时间 |
-| ${FEISHU_MEMORY_FIELDS.reviewer} | 项目知识维护人 |
-| ${FEISHU_MEMORY_FIELDS.reviewedAt} | 审核时间 |
-| ${FEISHU_MEMORY_FIELDS.reviewNote} | 审核意见 |
-| ${FEISHU_MEMORY_FIELDS.owner} | 负责人 |
-| ${FEISHU_MEMORY_FIELDS.source} | 来源 |
-| ${FEISHU_MEMORY_FIELDS.updatedAt} | 最后更新 |
-| ${FEISHU_MEMORY_FIELDS.syncToAi} | 是否同步给 AI |
+| ${FEISHU_MEMORY_FIELDS.knowledgeType} | 投稿字段：项目知识 / 原则 / 个人知识 / 其它 |
+| ${FEISHU_MEMORY_FIELDS.visibility} | 投稿字段：指定项目 / 全策划 / 仅本人 / 其它 |
+| ${FEISHU_MEMORY_FIELDS.project} | 投稿字段：项目代号；用于项目隔离 |
+| ${FEISHU_MEMORY_FIELDS.sensitivity} | 投稿字段：普通内部 / 项目敏感 / 禁止同步 / 不确定，请维护人判断 / 其它 |
+| ${FEISHU_MEMORY_FIELDS.source} | 投稿字段：自己经验 / 数据分析 / 策划案/需求 / 线上问题复盘 / 会议结论 / AI 协作 / 其它 |
+| ${FEISHU_MEMORY_FIELDS.tags} | 审核字段：标签 |
+| ${FEISHU_MEMORY_FIELDS.status} | 审核字段：待审核 / 已批准 / 废弃 / 需要补充 / 其它 |
+| ${FEISHU_MEMORY_FIELDS.submitter} | 系统字段：提交人 |
+| ${FEISHU_MEMORY_FIELDS.submittedAt} | 系统字段：提交时间 |
+| ${FEISHU_MEMORY_FIELDS.reviewer} | 审核字段：项目知识维护人 |
+| ${FEISHU_MEMORY_FIELDS.reviewedAt} | 审核字段：审核时间 |
+| ${FEISHU_MEMORY_FIELDS.reviewNote} | 审核字段：审核意见 |
+| ${FEISHU_MEMORY_FIELDS.owner} | 审核字段：负责人 |
+| ${FEISHU_MEMORY_FIELDS.updatedAt} | 系统字段：最后更新 |
+| ${FEISHU_MEMORY_FIELDS.syncToAi} | 审核字段：是否同步给 AI，支持 true 或 是 |
 `;
 }
 
@@ -200,4 +200,3 @@ if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
     process.exitCode = 1;
   });
 }
-
