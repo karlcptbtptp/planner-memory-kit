@@ -1,0 +1,31 @@
+{
+  "name": "planner-memory-kit",
+  "version": "0.1.0",
+  "description": "Shared planner memory toolkit: Feishu Bitable review workflow to local AI cache.",
+  "type": "module",
+  "private": false,
+  "scripts": {
+    "memory:sync:feishu": "tsx src/sync-feishu.ts",
+    "test": "tsx src/feishu-sync-core.test.ts && tsx src/sync-feishu-write.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "keywords": [
+    "planner",
+    "memory",
+    "feishu",
+    "bitable",
+    "ai-cache"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@larksuite/cli": "^1.0.0",
+    "better-sqlite3": "^12.9.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}
+

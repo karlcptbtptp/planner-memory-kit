@@ -1,0 +1,8 @@
+node_modules/
+dist/
+03_memory/shared/*.md
+memory.sqlite
+*.sqlite
+.env
+.env.local
+
