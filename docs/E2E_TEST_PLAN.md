@@ -1,134 +1,157 @@
-# 端到端测试方案
+# 策划团队共享记忆端到端测试方案
 
-目标：验证“其它策划投稿项目知识 -> 项目知识维护人审核 -> 项目本地同步 -> 新对话能召回”的闭环是否跑通。
+## 测试目标
 
-## 角色
+验证完整流程能跑通：
 
-| 角色 | 负责什么 |
-|---|---|
-| 投稿策划 | 用自己的项目视角提交一条项目知识 |
-| 项目知识维护人 | 审核、补齐审核字段、决定是否同步给 AI |
-| 项目执行人 | 在对应项目本地执行同步命令 |
-| AI 使用者 | 新开对话，用关键词验证能否召回 |
+策划或 Agent 投稿到 MCP 团队记忆库 -> 项目知识维护人审核 -> 对应项目本地同步 -> 新对话能召回 -> 其它项目不会误召回 -> 使用反馈能聚合回传。
 
-## 发给投稿策划的材料
+## 测试前提
 
-1. 飞书投稿表链接。
-2. 他的项目代号，例如 `hwby`、`giftWeb`、`zgc`。
-3. 一条测试知识模板。
+MCP 团队记忆库服务本体由团队提供，本仓只验证接入流程。测试环境需要准备：
 
-测试知识模板：
+- MCP endpoint
+- 测试 token 或本机凭据读取方式
+- 当前项目代号，例如 `giftWeb`
+- 另一个项目代号，例如 `otherProject`
+- 一个维护人账号
+- 一个普通投稿人或测试 Agent
 
-```text
-标题：测试-<项目代号>-首局结论沉淀
-摘要：这是一条用于验证共享记忆流程的测试知识。只有适用项目匹配、维护人审核通过后，AI 才能在本项目召回。
-正文/文档链接：本条为流程测试，无业务正文。
-知识类型：项目知识
-可见范围：指定项目
-适用项目：<项目代号>
-敏感级别：普通内部
-来源：自己经验
-其它说明：留空
-```
+## 测试数据
 
-投稿策划只做两件事：
+准备 5 条记录：
 
-1. 打开投稿表，按模板提交。
-2. 告诉维护人：“我提交了标题为 `测试-<项目代号>-首局结论沉淀` 的测试知识，请审核。”
+| 编号 | 类型 | 项目 | 状态 | 预期 |
+|---|---|---|---|---|
+| A | principle | 全项目 | active | 当前项目应同步 |
+| B | knowledge | 当前项目 | accepted | 当前项目应同步 |
+| C | knowledge | 其它项目 | accepted | 当前项目不应同步 |
+| D | knowledge | 当前项目 | pending_review | 不应同步 |
+| E | knowledge | 当前项目 | frozen | 不应同步 |
 
-投稿策划不填写 `状态`、`审核意见`、`项目知识维护人`、`审核时间`、`是否同步给 AI`。这些是维护人字段。
-
-## 维护人操作
-
-维护人在审核台找到这条记录后，检查：
-
-- 标题能不能搜索。
-- 摘要是不是一句话讲清楚。
-- `可见范围=指定项目`。这里的意思是：这条知识只给对应项目同步，不给所有项目同步。
-- `适用项目` 是否填了投稿策划自己的项目代号。
-- `敏感级别` 是否允许同步。
-- `来源` 是否清楚。
-- 不含 token、cookie、密码、数据库连接串、Webhook、`99_runtime/` 路径。
-- 不是个人知识。
-
-通过后填写：
+测试标题建议：
 
 ```text
-状态：已批准
-项目知识维护人：<维护人姓名>
-审核时间：<当前时间>
-审核意见：测试通过，字段完整，可同步给 AI。
-是否同步给 AI：是
-标签：流程,共享记忆
+测试-全项目-AI协作原则
+测试-giftWeb-首局结论沉淀
+测试-otherProject-项目隔离验证
+测试-未审核不应同步
+测试-冻结不应同步
 ```
 
-## 项目本地同步
+## 维护人审核动作
 
-在投稿策划对应项目里执行：
+维护人在 MCP 审核队列中确认：
+
+- A 进入 `principles.active`
+- B 进入 `knowledge_items.accepted`
+- C 进入 `knowledge_items.accepted`，但 `project_id=otherProject`
+- D 保持 `pending_review`
+- E 进入 `frozen`
+
+每条记录都要检查：
+
+- 标题能搜索
+- 摘要说明“以后什么任务该想起”
+- 正文不含 token、cookie、密码、数据库连接串、私钥
+- `project_id` 和 `clearance` 正确
+
+## 同步验证
+
+在当前项目本地执行：
 
 ```powershell
-cmd /c npm run memory:sync:feishu -- --project "<项目代号>"
+$env:MCP_MEMORY_ENDPOINT="https://memory.example.com/mcp"
+$env:PROJECT_ID="giftWeb"
+cmd /c npm run memory:sync:mcp -- --project "giftWeb" --dry-run
 ```
 
-预期结果：
+预期：
 
-- 输出里 `Accepted` 至少增加 1。
-- `03_memory/shared/feishu-memory.md` 出现标题 `测试-<项目代号>-首局结论沉淀`。
-- SQLite 知识库能搜到该标题。
+- Accepted 包含 A、B。
+- Skipped 包含 C，原因是 `project-not-visible`。
+- Skipped 包含 D，原因是 `review-required`。
+- Skipped 包含 E，原因是 `frozen`。
+
+确认无误后执行真实同步：
+
+```powershell
+cmd /c npm run memory:sync:mcp -- --project "giftWeb"
+```
+
+预期：
+
+- `03_memory/shared/team-memory.md` 出现 A、B。
+- SQLite `knowledge` 里能搜到 A、B。
+- C、D、E 不进入默认召回。
 
 ## 项目隔离验证
 
-再用另一个项目代号同步一次：
+换成另一个项目 dry-run：
 
 ```powershell
-cmd /c npm run memory:sync:feishu -- --project "not-the-same-project" --dry-run
+cmd /c npm run memory:sync:mcp -- --project "otherProject" --dry-run
 ```
 
-预期结果：
+预期：
 
-- 这条测试知识不会进入 `Accepted`。
-- 跳过原因应是项目不可见或不命中当前项目。
-
-## 未审核拦截验证
-
-复制一条测试知识，但只把 `状态` 改成 `已批准`，不要填写 `项目知识维护人` 和 `审核时间`。
-
-执行 dry-run：
-
-```powershell
-cmd /c npm run memory:sync:feishu -- --project "<项目代号>" --dry-run
-```
-
-预期结果：
-
-- 这条记录被跳过。
-- 跳过原因是 `review-required`。
-
-## 禁止同步验证
-
-把一条测试知识改成：
-
-```text
-敏感级别：禁止同步
-是否同步给 AI：是
-```
-
-执行 dry-run。
-
-预期结果：
-
-- 这条记录不落地。
-- 不出现在 `03_memory/shared/feishu-memory.md`。
+- C 可以进入 Accepted。
+- B 不应进入 Accepted。
 
 ## 新对话召回验证
 
-同步完成后，新开一个 AI 对话，让 AI 先读本地记忆，然后问：
+新开一个 AI 对话，问：
 
 ```text
-帮我查一下“测试-<项目代号>-首局结论沉淀”这条共享知识。
+帮我查一下“测试-giftWeb-首局结论沉淀”这条共享知识。
 ```
 
-预期结果：
+预期：
 
-- AI 能说出标题、摘要、适用项目和审核人。
-- AI 不会召回其它项目的测试知识。
+- AI 能说出标题、摘要、适用项目、审核状态。
+- AI 不会把 `otherProject` 的测试知识混进来。
+
+## 使用反馈回传验证
+
+本地记录一次采纳：
+
+```powershell
+npm run memory:usage -- record --id "<local_knowledge_id>" --type adopt --source manual --note "端到端测试采纳"
+```
+
+回传聚合反馈：
+
+```powershell
+cmd /c npm run memory:mcp:push-usage -- --project "giftWeb"
+```
+
+预期：
+
+- MCP 端对应 knowledge 的 `adopt_count` 或 usage 聚合增加。
+- 不出现原始对话正文。
+- 不出现本机运行态路径或敏感内容。
+
+## 冻结回归验证
+
+把 B 改为 frozen 后再次同步：
+
+```powershell
+cmd /c npm run memory:sync:mcp -- --project "giftWeb"
+```
+
+预期：
+
+- B 不再进入默认召回。
+- 本地可以保留历史记录，但应降权、归档或标记 archived。
+
+## 判定标准
+
+流程通过需要同时满足：
+
+- 未审核记录不能同步。
+- 审核通过记录能同步。
+- 指定项目知识只进入对应项目缓存。
+- 原则候选必须审核后才能成为 active principle。
+- 冻结知识不会继续被默认召回。
+- 使用反馈能回传为聚合信号。
+- 原始对话和敏感内容不会上传。

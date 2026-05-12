@@ -10,6 +10,6 @@
 
 1. 合并 `AGENTS.memory.template.md` 到项目 `AGENTS.md`。
 2. 合并 `gitignore.snippet` 到项目 `.gitignore`。
-3. 配置 `memory:sync:feishu` 命令。
+3. 配置 `memory:sync:mcp` 命令。
 4. 执行 dry-run 验证项目隔离。
 

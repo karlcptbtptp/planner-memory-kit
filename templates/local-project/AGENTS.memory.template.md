@@ -5,7 +5,7 @@
 新对话开始时，先读取：
 
 1. `03_memory/shared/README.md`
-2. `03_memory/shared/feishu-memory.md`
+2. `03_memory/shared/team-memory.md`
 3. `03_memory/project/` 中与当前任务相关的项目规则
 
 ## 三模块规则
@@ -19,8 +19,9 @@
 ## 同步命令
 
 ```powershell
-cmd /c npm run memory:sync:feishu -- --project "<project_code>" --dry-run
-cmd /c npm run memory:sync:feishu -- --project "<project_code>"
+cmd /c npm run memory:sync:mcp -- --project "<project_code>" --dry-run
+cmd /c npm run memory:sync:mcp -- --project "<project_code>"
+cmd /c npm run memory:mcp:push-usage -- --project "<project_code>"
 ```
 
 ## 安全规则
@@ -28,6 +29,7 @@ cmd /c npm run memory:sync:feishu -- --project "<project_code>"
 - 个人记忆不进团队 Git。
 - 个人工具不进团队 Git。
 - 未审核知识不能当作事实。
-- 禁止同步、个人知识、其它项目知识不能进入本项目缓存。
+- 禁止同步、个人知识、冻结知识、其它项目知识不能进入本项目缓存。
+- 本机只回传聚合使用反馈，不上传原始对话或敏感上下文。
 - 不写 token、cookie、密码、数据库连接串、Webhook、登录态或运行缓存路径。
 

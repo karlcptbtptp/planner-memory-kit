@@ -1,7 +1,7 @@
 {
   "name": "planner-memory-kit",
-  "version": "0.1.0",
-  "description": "Shared planner memory toolkit: Feishu Bitable review workflow to local AI cache.",
+  "version": "0.2.0",
+  "description": "Shared planner memory toolkit: MCP team memory workflow to local AI cache.",
   "type": "module",
   "private": false,
   "scripts": {
@@ -12,8 +12,9 @@
   "keywords": [
     "planner",
     "memory",
-    "feishu",
-    "bitable",
+    "mcp",
+    "team-memory",
+    "feishu-legacy",
     "ai-cache"
   ],
   "license": "MIT",

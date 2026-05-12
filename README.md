@@ -1,58 +1,95 @@
 # Planner Memory Kit
 
-把策划团队维护在飞书多维表格里的知识，同步成每个项目本地 AI 可以读取的缓存。
+策划团队共享记忆接入工具包：把远端 **MCP 团队记忆库** 中已审核、可同步的团队知识，同步成本机 AI 可以高速召回的本地缓存。
 
-核心约定：
+本仓只提供接入规范、项目模板、同步适配示例和流程说明；**不包含 MCP 团队记忆库服务本体**。
 
-- 飞书多维表格是人工主库。
-- 项目本地 SQLite 和 `03_memory/shared/` 是 AI 缓存。
-- Git 只放工具、模板和说明，不放真实知识库本体。
-- 投稿必须经过项目知识维护人审核，才允许进入 AI 缓存。
+## 核心约定
+
+- MCP 团队记忆库是远端团队事实源。
+- 本机 SQLite 和 `03_memory/shared/` 是每个项目 AI 的运行缓存。
+- Git 只放工具、模板、字段契约和说明，不放真实知识库本体。
+- 投稿默认未审核；维护人审核通过后，才允许进入项目 AI 缓存。
+- 本机只回传聚合使用反馈，不上传原始对话和敏感上下文。
+- 飞书多维表格同步保留为 legacy 适配，不再是推荐主链路。
+
+## 新版流程
+
+![策划团队共享记忆 MCP 流程](docs/assets/team-memory-mcp-flow.svg)
+
+1. 安装 Git 工具包。
+2. 配置 MCP 团队记忆库地址、项目代号、用户/Agent 身份和访问凭据。
+3. 策划或 Agent 投稿到 MCP 团队记忆库，默认进入待审核队列。
+4. 项目知识维护人审核真实性、复用性、权限和项目范围。
+5. 本机同步已审核、可见、未冻结的知识到本地 SQLite / Markdown 缓存。
+6. 新对话 AI 基于本地缓存召回知识，并把召回、采纳、遗漏、纠错等反馈聚合回传 MCP。
 
 ## 快速开始
 
 ```powershell
 npm install
-cmd /c npm run memory:sync:feishu -- --source fixtures/feishu-memory.sample.json --dry-run
+npm test
 ```
 
-连接真实飞书主库：
+在接入项目里推荐暴露这些命令：
+
+```json
+{
+  "scripts": {
+    "memory:sync:mcp": "tsx 90_tools/planner-memory-kit/src/sync-mcp.ts",
+    "memory:mcp:push-usage": "tsx 90_tools/planner-memory-kit/src/push-usage-mcp.ts",
+    "memory:sync:feishu": "tsx 90_tools/planner-memory-kit/src/sync-feishu.ts"
+  }
+}
+```
+
+> 当前仓库保留 Feishu legacy 同步代码；MCP 同步代码属于接入适配层，按 `docs/MCP_TEAM_MEMORY_IMPLEMENTATION.md` 的契约在项目内实现或接入团队已有 MCP 服务。
+
+推荐环境变量：
 
 ```powershell
-lark-cli auth login --scopes "base:record:read"
-$env:FEISHU_MEMORY_APP_TOKEN="<your_base_app_token>"
-$env:FEISHU_MEMORY_TABLE_ID="<your_table_id>"
-cmd /c npm run memory:sync:feishu -- --project "<project_code>"
+$env:MCP_MEMORY_ENDPOINT="https://memory.example.com/mcp"
+$env:MCP_MEMORY_TOKEN="<read_from_local_vault_or_env>"
+$env:PROJECT_ID="giftWeb"
+$env:ACTOR_ID="planner-ai-local"
 ```
 
-PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--source`、`--project` 误解析成 npm 自己的参数。macOS/Linux 可直接使用 `npm run memory:sync:feishu -- --project "<project_code>"`。
+同步命令形态：
+
+```powershell
+cmd /c npm run memory:sync:mcp -- --project "giftWeb" --dry-run
+cmd /c npm run memory:sync:mcp -- --project "giftWeb"
+cmd /c npm run memory:mcp:push-usage -- --project "giftWeb"
+```
+
+PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--project`、`--dry-run` 误解析成 npm 自己的参数。
 
 ## 同步硬闸门
 
 会同步：
 
-- `状态=已批准`
-- `是否同步给 AI=true` 或 `是否同步给 AI=是`
-- `项目知识维护人` 非空
-- `审核时间` 非空
-- `敏感级别 != 禁止同步`
-- `知识类型 != 个人知识`
-- `可见范围 != 仅本人`
-- `全策划` 内容，或 `指定项目` 且 `适用项目` 命中当前 `--project`
+- `knowledge_items.status = accepted`
+- `principles.status = active`
+- `project_id` 命中当前项目，或知识明确是全项目可见
+- `clearance` 不高于本机/当前 Agent 权限
+- 未被冻结、未归档、未标记删除
+- 通过敏感内容扫描
 
 会拦截：
 
+- 未审核、待补充、废弃、冻结、垃圾知识
+- 个人知识、其它项目专属知识、权限不足知识
 - token、secret、password、cookie、数据库连接串、私钥
-- `99_runtime/`、`state/`
-- `.Codex/settings.local.json`、`.cursor/mcp.json`、`.env`、`notifications.config.json`
+- `99_runtime/`、`state/`、`.env`、`.Codex/settings.local.json`、`.cursor/mcp.json`
 
 ## 文档
 
-- [落地包说明](docs/ROLLOUT_PACKET.md)
+- [MCP 团队记忆实施方案](docs/MCP_TEAM_MEMORY_IMPLEMENTATION.md)
 - [本地项目三模块搭建方案](docs/LOCAL_PROJECT_SETUP.md)
-- [飞书字段模板](docs/FEISHU_FIELDS.md)
+- [落地包说明](docs/ROLLOUT_PACKET.md)
 - [端到端测试方案](docs/E2E_TEST_PLAN.md)
 - [项目 AGENTS 模板](docs/AGENTS.template.md)
+- [飞书字段模板 legacy](docs/FEISHU_FIELDS.md)
 
 ## 本地项目三模块
 
@@ -65,3 +102,13 @@ PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--source`、`--project` 误�
 | 项目产出 | `02_outputs/` | 分析报告、策划案草稿、评审材料、交付物 |
 
 可复制模板见 `templates/local-project/`。
+
+## 飞书 legacy
+
+旧版飞书多维表格同步仍可运行：
+
+```powershell
+cmd /c npm run memory:sync:feishu -- --source fixtures/feishu-memory.sample.json --dry-run
+```
+
+它适合历史项目继续使用；新项目推荐走 MCP 团队记忆库。

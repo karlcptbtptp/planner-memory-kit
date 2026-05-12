@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">策划团队共享记忆 MCP 落地流程</title>
+  <desc id="desc">Git 工具包、MCP 团队记忆库、本机 SQLite 缓存和 AI 使用反馈闭环。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3fbf8"/>
+      <stop offset="0.52" stop-color="#eef8ff"/>
+      <stop offset="1" stop-color="#fffaf0"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f3a4a" flood-opacity="0.14"/>
+    </filter>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
+      <path d="M2,2 L12,7 L2,12 Z" fill="#0b73b7"/>
+    </marker>
+    <style>
+      .title { font: 700 46px "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif; fill: #10233f; letter-spacing: 0; }
+      .subtitle { font: 500 20px "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif; fill: #3e5d6b; }
+      .label { font: 700 22px "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif; fill: #103241; }
+      .body { font: 500 17px "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif; fill: #42616e; }
+      .small { font: 500 15px "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif; fill: #5b727b; }
+      .num { font: 800 18px Arial, sans-serif; fill: #ffffff; }
+      .card { fill: #ffffff; stroke: #b7dad6; stroke-width: 2; rx: 18; filter: url(#shadow); }
+      .guard { fill: #ffffff; stroke: #20a892; stroke-width: 2; rx: 16; }
+      .chip { fill: #e7f7f3; stroke: #88cfc4; stroke-width: 1.5; rx: 14; }
+      .line { stroke: #0b73b7; stroke-width: 6; fill: none; marker-end: url(#arrow); stroke-linecap: round; }
+      .loop { stroke: #f19b38; stroke-width: 5; fill: none; marker-end: url(#arrow); stroke-dasharray: 10 8; stroke-linecap: round; }
+      .teal { fill: #009b8f; }
+      .blue { fill: #0b73b7; }
+      .orange { fill: #f19b38; }
+      .dark { fill: #10233f; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="820" fill="url(#bg)"/>
+
+  <text x="700" y="68" text-anchor="middle" class="title">策划团队共享记忆 MCP 落地流程</text>
+  <text x="700" y="105" text-anchor="middle" class="subtitle">远端 MCP 团队记忆库做事实源，本机 SQLite 做 AI 高速缓存和使用反馈</text>
+
+  <rect x="90" y="132" width="1220" height="72" class="guard"/>
+  <g transform="translate(122 150)">
+    <circle cx="26" cy="18" r="18" class="dark"/>
+    <path d="M17 18h18M26 9v18" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="180" y="163" class="label">Git 工具包地址</text>
+  <text x="180" y="190" class="body">github.com/karlcptbtptp/planner-memory-kit</text>
+  <text x="910" y="176" class="small">本仓只放模板、接入规范、流程图与适配示例，不放真实知识库本体</text>
+
+  <g transform="translate(70 250)">
+    <rect width="185" height="240" class="card"/>
+    <circle cx="28" cy="30" r="18" class="teal"/>
+    <text x="28" y="36" text-anchor="middle" class="num">1</text>
+    <text x="92" y="38" text-anchor="middle" class="label">安装工具包</text>
+    <rect x="54" y="78" width="78" height="58" class="chip"/>
+    <path d="M73 95h40v24H73zM92 88v38M80 114l12 12 12-12" stroke="#009b8f" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="92" y="168" text-anchor="middle" class="body">复制模板</text>
+    <text x="92" y="194" text-anchor="middle" class="body">配置本地项目</text>
+    <text x="92" y="220" text-anchor="middle" class="small">AGENTS / 03_memory</text>
+  </g>
+
+  <path d="M270 370H322" class="line"/>
+
+  <g transform="translate(330 250)">
+    <rect width="185" height="240" class="card"/>
+    <circle cx="28" cy="30" r="18" class="teal"/>
+    <text x="28" y="36" text-anchor="middle" class="num">2</text>
+    <text x="92" y="38" text-anchor="middle" class="label">连接 MCP</text>
+    <rect x="48" y="73" width="88" height="70" class="chip"/>
+    <path d="M62 122c20-36 42-36 62 0M68 99h48M92 82v52" stroke="#0b73b7" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <text x="92" y="168" text-anchor="middle" class="body">endpoint</text>
+    <text x="92" y="194" text-anchor="middle" class="body">project_id</text>
+    <text x="92" y="220" text-anchor="middle" class="small">actor / clearance</text>
+  </g>
+
+  <path d="M530 370H582" class="line"/>
+
+  <g transform="translate(590 250)">
+    <rect width="185" height="240" class="card"/>
+    <circle cx="28" cy="30" r="18" class="teal"/>
+    <text x="28" y="36" text-anchor="middle" class="num">3</text>
+    <text x="92" y="38" text-anchor="middle" class="label">投稿候选</text>
+    <rect x="50" y="76" width="84" height="68" class="chip"/>
+    <path d="M72 92h40M72 108h40M72 124h28" stroke="#009b8f" stroke-width="5" stroke-linecap="round"/>
+    <path d="M116 124l17 17M133 124l-17 17" stroke="#f19b38" stroke-width="5" stroke-linecap="round"/>
+    <text x="92" y="168" text-anchor="middle" class="body">knowledge_items</text>
+    <text x="92" y="194" text-anchor="middle" class="body">principle_candidates</text>
+    <text x="92" y="220" text-anchor="middle" class="small">默认未审核</text>
+  </g>
+
+  <path d="M790 370H842" class="line"/>
+
+  <g transform="translate(850 250)">
+    <rect width="185" height="240" class="card"/>
+    <circle cx="28" cy="30" r="18" class="teal"/>
+    <text x="28" y="36" text-anchor="middle" class="num">4</text>
+    <text x="92" y="38" text-anchor="middle" class="label">维护人审核</text>
+    <circle cx="92" cy="103" r="38" fill="#e7f7f3" stroke="#20a892" stroke-width="4"/>
+    <path d="M72 104l15 15 28-34" stroke="#009b8f" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="92" y="168" text-anchor="middle" class="body">真实 / 可复用</text>
+    <text x="92" y="194" text-anchor="middle" class="body">权限 / 项目范围</text>
+    <text x="92" y="220" text-anchor="middle" class="small">通过后才可同步</text>
+  </g>
+
+  <path d="M1050 370H1102" class="line"/>
+
+  <g transform="translate(1110 250)">
+    <rect width="220" height="240" class="card"/>
+    <circle cx="28" cy="30" r="18" class="teal"/>
+    <text x="28" y="36" text-anchor="middle" class="num">5</text>
+    <text x="112" y="38" text-anchor="middle" class="label">本机同步缓存</text>
+    <ellipse cx="82" cy="92" rx="42" ry="17" fill="#e7f7f3" stroke="#0b73b7" stroke-width="4"/>
+    <rect x="40" y="92" width="84" height="50" fill="#e7f7f3" stroke="#0b73b7" stroke-width="4"/>
+    <ellipse cx="82" cy="142" rx="42" ry="17" fill="#e7f7f3" stroke="#0b73b7" stroke-width="4"/>
+    <rect x="132" y="85" width="48" height="58" fill="#fff" stroke="#009b8f" stroke-width="4" rx="4"/>
+    <path d="M143 105h24M143 121h18" stroke="#009b8f" stroke-width="4" stroke-linecap="round"/>
+    <text x="112" y="168" text-anchor="middle" class="body">SQLite + Markdown</text>
+    <text x="112" y="194" text-anchor="middle" class="body">FTS 本地召回</text>
+    <text x="112" y="220" text-anchor="middle" class="small">不落地未审核知识</text>
+  </g>
+
+  <g transform="translate(290 565)">
+    <rect width="270" height="130" class="card"/>
+    <circle cx="34" cy="34" r="20" class="blue"/>
+    <path d="M25 34h18M34 25v18" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+    <text x="76" y="40" class="label">新对话 AI 召回协作</text>
+    <text x="34" y="76" class="body">memory:task start / refresh</text>
+    <text x="34" y="103" class="body">search / prefetch / pin</text>
+  </g>
+
+  <path d="M1188 506 C1110 630 760 640 575 628" class="line"/>
+
+  <g transform="translate(730 565)">
+    <rect width="320" height="130" class="card"/>
+    <circle cx="34" cy="34" r="20" class="orange"/>
+    <path d="M25 35l8 8 16-22" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="76" y="40" class="label">使用反馈闭环</text>
+    <text x="34" y="76" class="body">recall / adopt / miss / correction</text>
+    <text x="34" y="103" class="body">只回传聚合信号，不传原始对话</text>
+  </g>
+
+  <path d="M890 556 C875 505 900 495 920 490" class="loop"/>
+
+  <rect x="94" y="735" width="1212" height="54" class="guard"/>
+  <g transform="translate(126 748)">
+    <circle cx="18" cy="18" r="18" class="teal"/>
+    <path d="M9 18l7 7 13-18" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="176" y="770" class="label">原则：</text>
+  <text x="258" y="770" class="body">未审核不入库</text>
+  <text x="430" y="770" class="body">禁止同步不落地</text>
+  <text x="632" y="770" class="body">指定项目只进对应项目</text>
+  <text x="892" y="770" class="body">原始对话不上传团队库</text>
+  <text x="1154" y="770" class="body">本机 SQLite 继续做高速缓存</text>
+</svg>
