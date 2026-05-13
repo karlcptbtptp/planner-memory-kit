@@ -85,6 +85,7 @@ PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--project`、`--dry-run` 误�
 ## 文档
 
 - [MCP 团队记忆实施方案](docs/MCP_TEAM_MEMORY_IMPLEMENTATION.md)
+- [本地智能体知识识别与投稿指南](docs/AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md)
 - [本地项目三模块搭建方案](docs/LOCAL_PROJECT_SETUP.md)
 - [落地包说明](docs/ROLLOUT_PACKET.md)
 - [端到端测试方案](docs/E2E_TEST_PLAN.md)

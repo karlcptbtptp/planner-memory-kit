@@ -41,3 +41,21 @@ npm run memory:sync:mcp -- --project "<project_code>"
 - 用户指出“你忘了”或“知识库里有”时，记录 miss，再补召回。
 - 知识被实际用于回答、分析或决策时，记录 adopt。
 - 发现知识过期或误导时，记录 correction。
+
+## 知识投稿规则
+
+本地智能体发现可复用结论、稳定流程、踩坑修复、决策记录或原则候选时，先读取：
+
+```text
+docs/AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md
+```
+
+投稿前必须确认：
+
+- 这是可复用知识，不是闲聊、过程日志或未验证猜想。
+- 标题、摘要、正文、标签、项目范围、来源和敏感等级都能说清楚。
+- 不含 token、cookie、密码、连接串、单用户隐私、运行态路径或原始对话。
+- 已搜索本地缓存，确认不是已有知识的重复版本。
+- 普通知识只能提交为 `unreviewed` 或 `pending_review`。
+- 原则只能提交到 `principle_candidates`，不能由智能体直接写入正式 `principles`。
+- 投稿后在维护人审核前，不能把它当作团队事实或默认召回知识。

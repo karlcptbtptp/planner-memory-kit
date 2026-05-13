@@ -6,6 +6,7 @@
 2. MCP 团队记忆库接入信息：endpoint、项目代号、权限说明、凭据获取方式
 3. 流程说明图：`docs/assets/team-memory-mcp-flow.svg`
 4. 接入规则：`docs/MCP_TEAM_MEMORY_IMPLEMENTATION.md`
+5. 本地智能体投稿规则：`docs/AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md`
 
 ## 一句话说明
 
@@ -50,7 +51,7 @@ AI 使用者：
 
 1. 新对话启动时读取本地 `03_memory/shared/` 和任务记忆包。
 2. 用本地 SQLite 搜索已同步知识。
-3. 发现有价值的新结论时，提交到 MCP 团队记忆库继续走审核。
+3. 发现有价值的新结论时，先按 `AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md` 判断是否是知识，再提交到 MCP 团队记忆库继续走审核。
 4. 发现知识没想起、过期或误导时，记录 miss / correction。
 
 ## 推荐命令

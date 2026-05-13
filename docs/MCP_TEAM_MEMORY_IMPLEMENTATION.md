@@ -283,6 +283,8 @@ title + summary + aliases + content + tags
 
 ## AI 使用记忆体的方式
 
+本地智能体识别和投稿新知识时，按 [本地智能体知识识别与投稿指南](AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md) 执行。该指南定义了什么算知识、什么时候上传、如何填写投稿字段、哪些内容只能留本地或禁止上传。
+
 ### 新对话开场
 
 AI 应先读取本地低 token 入口：
