@@ -15,7 +15,7 @@
 
 | 模块 | 目录 | 规则 |
 |---|---|---|
-| 智能体记忆 | `03_memory/` | 放 AI 需要稳定记住的内容；MCP 团队记忆同步缓存进入 `03_memory/shared/`；个人记忆进入 `03_memory/personal/` 且不提交 |
+| 智能体记忆 | `03_memory/` | 放 AI 需要稳定记住的内容；MCP 团队记忆同步缓存进入 `03_memory/shared/`；本地新知识默认进入个人知识池 |
 | 个人工具 | `90_tools/personal/` | 放每个策划自己的脚本、快捷命令和本地工具；默认不提交团队 Git |
 | 项目产出 | `02_outputs/` | 放报告、策划案草稿、评审材料、交付物；可按项目规则提交 |
 
@@ -44,18 +44,37 @@ npm run memory:sync:mcp -- --project "<project_code>"
 
 ## 知识投稿规则
 
-本地智能体发现可复用结论、稳定流程、踩坑修复、决策记录或原则候选时，先读取：
+本地新产生的知识默认先进入个人知识池，不直接写团队库。本地智能体发现可复用结论、稳定流程、踩坑修复、决策记录或原则候选时，先读取：
 
 ```text
 docs/AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md
+docs/LOCAL_AGENT_AUTOMATION.md
 ```
 
-投稿前必须确认：
+自动化筛选上传前必须确认：
 
 - 这是可复用知识，不是闲聊、过程日志或未验证猜想。
 - 标题、摘要、正文、标签、项目范围、来源和敏感等级都能说清楚。
 - 不含 token、cookie、密码、连接串、单用户隐私、运行态路径或原始对话。
 - 已搜索本地缓存，确认不是已有知识的重复版本。
+- 没有标注 `do_not_upload`、`local_only`、`personal_only`、`禁止同步`。
 - 普通知识只能提交为 `unreviewed` 或 `pending_review`。
 - 原则只能提交到 `principle_candidates`，不能由智能体直接写入正式 `principles`。
 - 投稿后在维护人审核前，不能把它当作团队事实或默认召回知识。
+
+## 自动化治理任务
+
+本地应定期运行记忆治理自动化：
+
+```powershell
+npm run memory:ls:maintain -- --project "<project_code>"
+```
+
+该任务负责：
+
+- 从个人知识池中筛选可上传团队候选。
+- 跳过敏感内容和明确标注不上传团队的内容。
+- 全量同步 LS 已审核知识到本地团队缓存。
+- 整理本地重复、冲突、旧版替代知识。
+- 汇总 LS 知识的 recall / adopt / miss / correction / ignore / blocked 使用反馈并回传。
+- 将冲突、重复、低采纳、高 miss 等治理信号上报 LS。

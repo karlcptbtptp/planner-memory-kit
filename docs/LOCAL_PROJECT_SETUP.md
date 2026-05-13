@@ -20,7 +20,7 @@ project-root/
       README.md
       team-memory.md          # 自动生成，不手写
     project/                  # 本项目稳定规则、项目地图、常用口径
-    personal/                 # 个人记忆，不提交 Git
+    personal/                 # 个人记忆和本地知识池，不提交 Git
 
   90_tools/                   # 工具
     personal/                 # 个人脚本，不提交 Git
@@ -41,13 +41,13 @@ project-root/
 - MCP 同步下来的团队共享知识：`03_memory/shared/team-memory.md`
 - 本项目稳定规则：`03_memory/project/`
 - 常用口径、流程、踩坑：`03_memory/project/`
-- 个人偏好或只适合自己知道的内容：`03_memory/personal/`
+- 个人偏好、只适合自己知道的内容、本地新产生的个人知识池：`03_memory/personal/`
 
 规则：
 
 - `03_memory/shared/team-memory.md` 由同步命令生成，不手写。
 - `03_memory/personal/` 默认加入 `.gitignore`。
-- 能复用给团队的知识，提交到 MCP 团队记忆库并走维护人审核。
+- 能复用给团队的知识，先进入本地个人知识池，再由自动化任务筛选、脱敏、去重后提交到 MCP 团队记忆库并走维护人审核。
 - 未审核内容不能被 AI 当作事实，只能当作草稿或线索。
 
 ## 模块 2：个人工具

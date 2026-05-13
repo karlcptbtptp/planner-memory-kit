@@ -1,6 +1,6 @@
 # 落地包说明
 
-团队负责人只需要把四样东西发给项目成员：
+团队负责人只需要把五样东西发给项目成员：
 
 1. 工具 Git 仓：`https://github.com/karlcptbtptp/planner-memory-kit`
 2. MCP 团队记忆库接入信息：endpoint、项目代号、权限说明、凭据获取方式
@@ -10,7 +10,7 @@
 
 ## 一句话说明
 
-远端 MCP 团队记忆库负责“哪些知识可信、谁能看、是否过期”；本机项目记忆库负责“AI 怎么快速想起并使用这些知识”。
+远端 MCP 团队记忆库负责“哪些知识可信、谁能看、是否过期”；本机项目记忆库负责“个人知识池、AI 快速召回、自动化筛选上传和使用反馈”。
 
 ## 每个项目要做什么
 
@@ -51,8 +51,9 @@ AI 使用者：
 
 1. 新对话启动时读取本地 `03_memory/shared/` 和任务记忆包。
 2. 用本地 SQLite 搜索已同步知识。
-3. 发现有价值的新结论时，先按 `AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md` 判断是否是知识，再提交到 MCP 团队记忆库继续走审核。
-4. 发现知识没想起、过期或误导时，记录 miss / correction。
+3. 新结论默认先进入本地个人知识池。
+4. 自动化任务按 `AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md` 和 `LOCAL_AGENT_AUTOMATION.md` 判断是否上传团队候选。
+5. 发现知识没想起、过期或误导时，记录 miss / correction，并由自动化汇总反馈 LS。
 
 ## 推荐命令
 
@@ -63,6 +64,7 @@ AI 使用者：
   "scripts": {
     "memory:sync:mcp": "tsx 90_tools/planner-memory-kit/src/sync-mcp.ts",
     "memory:mcp:push-usage": "tsx 90_tools/planner-memory-kit/src/push-usage-mcp.ts",
+    "memory:ls:maintain": "tsx 90_tools/planner-memory-kit/src/ls-maintain.ts",
     "memory:search": "node 90_tools/shared/run-memory-tool.mjs search.ts",
     "memory:task": "node 90_tools/shared/run-memory-tool.mjs task.ts",
     "memory:usage": "node 90_tools/shared/run-memory-tool.mjs usage.ts"
@@ -77,6 +79,7 @@ $env:MCP_MEMORY_ENDPOINT="https://memory.example.com/mcp"
 $env:PROJECT_ID="<项目代号>"
 cmd /c npm run memory:sync:mcp -- --project "<项目代号>" --dry-run
 cmd /c npm run memory:sync:mcp -- --project "<项目代号>"
+cmd /c npm run memory:ls:maintain -- --project "<项目代号>"
 ```
 
 ## 验收标准
@@ -87,9 +90,11 @@ cmd /c npm run memory:sync:mcp -- --project "<项目代号>"
 - 已批准且允许同步的知识能进入对应项目缓存。
 - 指定项目知识不会进入其它项目缓存。
 - 原则候选不会绕过审核直接变成正式原则。
-- 个人知识、禁止同步内容和敏感内容不会落地。
+- 个人知识默认只落本地个人池；禁止同步内容和敏感内容不会上传 LS，也不会进入团队缓存。
 - 新对话能通过本地记忆召回同步后的知识。
 - 本机使用反馈能以聚合形式回传 MCP。
+- 本地个人知识默认不上传，只有自动化筛选通过的候选才提交 LS 审核队列。
+- 重复、矛盾、旧版替代只作为治理反馈上报 LS，不自动改 LS 主字段。
 
 ## 推荐第一轮测试
 

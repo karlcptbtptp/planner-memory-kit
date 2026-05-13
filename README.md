@@ -7,7 +7,9 @@
 ## 核心约定
 
 - MCP 团队记忆库是远端团队事实源。
-- 本机 SQLite 和 `03_memory/shared/` 是每个项目 AI 的运行缓存。
+- 本地新知识默认先进入个人知识池，再由自动化任务筛选上传候选。
+- 这不是默认双写：本地写入不等于上传 LS，只有通过筛选的候选才进入团队审核队列。
+- 本机 SQLite 和 `03_memory/shared/` 是每个项目 AI 的运行缓存和 LS 镜像。
 - Git 只放工具、模板、字段契约和说明，不放真实知识库本体。
 - 投稿默认未审核；维护人审核通过后，才允许进入项目 AI 缓存。
 - 本机只回传聚合使用反馈，不上传原始对话和敏感上下文。
@@ -19,10 +21,11 @@
 
 1. 安装 Git 工具包。
 2. 配置 MCP 团队记忆库地址、项目代号、用户/Agent 身份和访问凭据。
-3. 策划或 Agent 投稿到 MCP 团队记忆库，默认进入待审核队列。
-4. 项目知识维护人审核真实性、复用性、权限和项目范围。
-5. 本机同步已审核、可见、未冻结的知识到本地 SQLite / Markdown 缓存。
-6. 新对话 AI 基于本地缓存召回知识，并把召回、采纳、遗漏、纠错等反馈聚合回传 MCP。
+3. 本地新知识默认进入个人知识池。
+4. 本地自动化任务定期筛选可上传候选，跳过敏感内容和明确不上传团队的内容。
+5. 项目知识维护人审核真实性、复用性、权限和项目范围。
+6. 自动化任务全量同步已审核、可见、未冻结的 LS 知识到本地 SQLite / Markdown 缓存。
+7. 新对话 AI 基于本地缓存召回知识，并把召回、采纳、遗漏、纠错、冲突等反馈聚合回传 MCP。
 
 ## 快速开始
 
@@ -38,6 +41,7 @@ npm test
   "scripts": {
     "memory:sync:mcp": "tsx 90_tools/planner-memory-kit/src/sync-mcp.ts",
     "memory:mcp:push-usage": "tsx 90_tools/planner-memory-kit/src/push-usage-mcp.ts",
+    "memory:ls:maintain": "tsx 90_tools/planner-memory-kit/src/ls-maintain.ts",
     "memory:sync:feishu": "tsx 90_tools/planner-memory-kit/src/sync-feishu.ts"
   }
 }
@@ -60,6 +64,7 @@ $env:ACTOR_ID="planner-ai-local"
 cmd /c npm run memory:sync:mcp -- --project "giftWeb" --dry-run
 cmd /c npm run memory:sync:mcp -- --project "giftWeb"
 cmd /c npm run memory:mcp:push-usage -- --project "giftWeb"
+cmd /c npm run memory:ls:maintain -- --project "giftWeb"
 ```
 
 PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--project`、`--dry-run` 误解析成 npm 自己的参数。
@@ -81,11 +86,13 @@ PowerShell 下推荐加 `cmd /c`，避免 npm 把 `--project`、`--dry-run` 误�
 - 个人知识、其它项目专属知识、权限不足知识
 - token、secret、password、cookie、数据库连接串、私钥
 - `99_runtime/`、`state/`、`.env`、`.Codex/settings.local.json`、`.cursor/mcp.json`
+- 标注 `do_not_upload`、`local_only`、`personal_only`、`禁止同步` 的本地知识
 
 ## 文档
 
 - [MCP 团队记忆实施方案](docs/MCP_TEAM_MEMORY_IMPLEMENTATION.md)
 - [本地智能体知识识别与投稿指南](docs/AGENT_KNOWLEDGE_SUBMISSION_GUIDE.md)
+- [本地智能体自动化治理任务](docs/LOCAL_AGENT_AUTOMATION.md)
 - [本地项目三模块搭建方案](docs/LOCAL_PROJECT_SETUP.md)
 - [落地包说明](docs/ROLLOUT_PACKET.md)
 - [端到端测试方案](docs/E2E_TEST_PLAN.md)

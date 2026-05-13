@@ -1,6 +1,6 @@
 {
   "name": "planner-memory-kit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Shared planner memory toolkit: MCP team memory workflow to local AI cache.",
   "type": "module",
   "private": false,
